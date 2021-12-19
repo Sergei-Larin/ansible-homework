@@ -29,4 +29,7 @@
 
   handlers:
     - name: reload firewalld
-      command: firewall-cmd --reload
+      systemd:
+        state: restarted
+        daemon_reload: yes
+        name: firewalld
