@@ -1,0 +1,9 @@
+- name: Install httpd service
+  hosts: all
+  gather_facts: yes
+  become: yes
+ 
+  tasks:
+    - name: install httpd using role
+      import_role:
+       name: 01_install_httpd

@@ -1,0 +1,46 @@
+---
+- name: install "{{ vsftpd_packages }}" package
+  yum:
+    name: "{{ vsftpd_packages  }}"
+    state: latest
+
+- include_tasks: roles/02_install_vsftpd/tasks/selinux.yaml
+  when: ansible_selinux is defined and ansible_selinux != false and ansible_selinux.status == 'enabled'
+
+- name: Ensure `anon_root` exists
+  file:
+    path: "{{ vsftpd_anon_root }}"
+    state: directory
+    owner: "{{ vsftpd_owner }}"
+    group: "{{ vsftpd_group }}"
+    mode: "{{ vsftpd_mode }}"
+    setype: "{{ vsftpd_setype }}"
+  when: vsftpd_anon_root is defined
+    
+- name: Copy config file
+  template:
+    src: vsftpd.j2
+    dest: "{{ vsftpd_config_file }}"         
+    mode: '0600'
+  notify: restart vsftpd
+
+- name: Ensure service is started
+  service:
+    name: "{{ vsftpd_service }}"
+    state: started
+    enabled: true
+
+- name: Start service firewalld if not started
+  service:
+    name: firewalld
+    state: started
+
+- name: enable port to be in public zone
+  firewalld:
+    zone: public
+    service: ftp
+    permanent: true
+    state: enabled
+    immediate: true
+  notify: reload firewalld
+

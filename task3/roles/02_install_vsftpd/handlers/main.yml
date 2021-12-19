@@ -1,0 +1,12 @@
+---
+# handlers file for 01_install_vsftpd
+- name: restart vsftpd
+  service:
+    name: "{{ vsftpd_service }}"
+    state: restarted
+
+- name: reload firewalld
+  systemd:
+    state: restarted
+    daemon_reload: yes
+    name: firewalld

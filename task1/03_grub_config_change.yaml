@@ -1,0 +1,40 @@
+---
+- name: Configuring GRUB
+  hosts: all
+  become: yes
+
+  tasks:
+    - name: get Grub config
+      shell: cat /etc/default/grub | grep GRUB_CMDLINE_LINUX | awk -F '"' '{print $2}'
+      register: grub_cfg_grep
+      changed_when: false
+    - debug:
+        msg: "finding data: {{ grub_cfg_grep.stdout }}"
+
+    - name: add parametr net.ifnames=0 in GRUB
+      lineinfile:
+        path: /etc/default/grub
+        regexp: '^GRUB_CMDLINE_LINUX="((\w.?)*)"$'
+        line: 'GRUB_CMDLINE_LINUX="{{ grub_cfg_grep.stdout }} net.ifnames=0"'
+      when: '"net.ifnames=0" not in grub_cfg_grep.stdout'
+      register: grub_updated_var1
+
+    - name: update GRUB variable config
+      shell: cat /etc/default/grub | grep GRUB_CMDLINE_LINUX | awk -F '"' '{print $2}'
+      register: grub_cfg_grep
+      changed_when: false
+    - debug:
+        msg: "{{ grub_cfg_grep.stdout }}"
+
+    - name: add parametr biosdevname=0 in GRUB
+      lineinfile:
+        path: /etc/default/grub
+        regexp: '^GRUB_CMDLINE_LINUX="((\w.?)*)"$'
+        line: 'GRUB_CMDLINE_LINUX="{{ grub_cfg_grep.stdout }} biosdevname=0"'
+      when: '"biosdevname=0" not in grub_cfg_grep.stdout'
+      register: grub_updated_var2
+
+    - name: reload GRUB
+      command: grub2-mkconfig     
+      when: grub_updated_var1.msg is defined or grub_updated_var2.msg is defined
+

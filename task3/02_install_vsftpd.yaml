@@ -1,0 +1,9 @@
+- name: Install vsftpd service
+  hosts: all
+  gather_facts: yes
+  become: yes
+ 
+  tasks:
+    - name: install service using role
+      import_role:
+       name: 02_install_vsftpd

@@ -1,0 +1,32 @@
+---
+- name: install web service
+  hosts: all
+  become: yes
+  tasks:
+
+    - name: uninstall httpd package
+      yum:
+        name: httpd
+        state: absent
+
+    - name: Clean artifact path
+      file:
+        state: absent
+        path: "/var/www/html/index.html"
+
+    - name: Start service firewalld if not started
+      service:
+        name: firewalld
+        state: started      
+      
+    - name: disable http port to be in public zone
+      firewalld:
+        zone: public
+        service: http
+        permanent: true
+        state: disabled
+      notify: reload firewalld
+
+  handlers:
+    - name: reload firewalld
+      command: firewall-cmd --reload

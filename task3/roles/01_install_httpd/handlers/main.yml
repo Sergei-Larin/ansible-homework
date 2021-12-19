@@ -1,0 +1,4 @@
+---
+# handlers file for 01_install_web_service
+- name: reload firewalld
+  command: firewall-cmd --reload
