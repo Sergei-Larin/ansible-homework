@@ -7,15 +7,16 @@
 - include_tasks: roles/02_install_vsftpd/tasks/selinux.yaml
   when: ansible_selinux is defined and ansible_selinux != false and ansible_selinux.status == 'enabled'
 
-- name: Ensure `anon_root` exists
+
+- name: Create upload folder
   file:
-    path: "{{ vsftpd_anon_root }}"
+    path: "{{ vsftpd_upload_folder }}"
     state: directory
     owner: "{{ vsftpd_owner }}"
     group: "{{ vsftpd_group }}"
     mode: "{{ vsftpd_mode }}"
     setype: "{{ vsftpd_setype }}"
-  when: vsftpd_anon_root is defined
+  when: vsftpd_upload_folder is defined
     
 - name: Copy config file
   template:

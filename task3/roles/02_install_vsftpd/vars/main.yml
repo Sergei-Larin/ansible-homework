@@ -9,7 +9,8 @@ vsftpd_service: vsftpd
 
 vsftpd_config_file: /etc/vsftpd/vsftpd.conf
 
-vsftpd_anon_root: /var/ftp/pub
+vsftpd_upload_folder: /var/ftp/pub/upload
+vsftpd_anon_root: /var/ftp/pub/
 
 vsftpd_options:
    - key: xferlog_enable
@@ -18,3 +19,4 @@ vsftpd_options:
      value: /var/log/vsftp_xfer.log
    - key: anon_root
      value: "{{ vsftpd_anon_root }}"
+

@@ -1,4 +1,4 @@
 ---
-# handlers file for 01_install_web_service
+# handlers file for 01_install_httpd
 - name: reload firewalld
   command: firewall-cmd --reload

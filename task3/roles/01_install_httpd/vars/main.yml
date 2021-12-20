@@ -1,5 +1,5 @@
 ---
-# vars file for 01_install_web_service
+# vars file for 01_install_httpd
 #
 main_page: "/var/www/html/index.html"
 package: httpd

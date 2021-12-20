@@ -2,4 +2,4 @@
 - hosts: localhost
   remote_user: root
   roles:
-    - 01_install_web_service
+    - 01_install_vsftpd
